@@ -1,0 +1,37 @@
+body{
+    background-color: rgb(106, 194, 235);
+    font-family: fantasy;
+} 
+.center, h1{
+    margin: auto;
+    width: 50%;
+    text-align: center;
+    line-height: 150%;
+}
+
+.header{
+    height: 5rem;
+    color: rgb(255, 255, 255);
+    background-color: rgb(82, 14, 14);
+}
+.footer{
+    height: 5rem;
+    background-color: rgb(82, 14, 14);
+    text-align: center;
+    color: white;
+    font-size: 1.5rem;
+    
+}
+.footer p{
+    padding-top: 20px;
+}
+
+
+.section h1{
+    text-align: right;
+    margin-right: 100px;
+}
+
+input[type="radio"] {
+    margin-right: 0;
+  }
