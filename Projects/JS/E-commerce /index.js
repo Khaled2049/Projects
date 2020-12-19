@@ -6,11 +6,11 @@ const usersRepo = require('./repositories/users');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieSession(
-  {
-    keys: ['asdfsdfhg']
-  }
-))
+app.use(
+  cookieSession({
+    keys: ['lkasld235j']
+  })
+);
 
 app.get('/signup', (req, res) => {
   res.send(`
@@ -38,51 +38,53 @@ app.post('/signup', async (req, res) => {
     return res.send('Passwords must match');
   }
 
-  // create a user inside in the users repo
-  const user = await usersRepo.create({email, password});
+  // Create a user in our user repo to represent this person
+  const user = await usersRepo.create({ email, password });
 
-  // store the id of the user inside the users cookie
+  // Store the id of that user inside the users cookie
   req.session.userId = user.id;
-
 
   res.send('Account created!!!');
 });
 
 app.get('/signout', (req, res) => {
   req.session = null;
-  res.send("You are logged out");
-})
+  res.send('You are logged out');
+});
 
 app.get('/signin', (req, res) => {
-  res.send(
-    `<div>
-    
+  res.send(`
+    <div>
       <form method="POST">
         <input name="email" placeholder="email" />
         <input name="password" placeholder="password" />
-        <input name="passwordConfirmation" placeholder="password confirmation" />
         <button>Sign In</button>
       </form>
     </div>
-    `
-  )
-})
+  `);
+});
 
-app.post('/signin', async (req, res) =>{
-  const {email, password} = req.body;
+app.post('/signin', async (req, res) => {
+  const { email, password } = req.body;
 
-  const user = await usersRepo.getOneBy({email});
-  if (!user){
+  const user = await usersRepo.getOneBy({ email });
+
+  if (!user) {
     return res.send('Email not found');
   }
 
-  if (user.password !== password){
+  const validPassword = await usersRepo.comparePasswords(
+    user.password,
+    password
+  );
+  if (!validPassword) {
     return res.send('Invalid password');
   }
 
   req.session.userId = user.id;
-  res.send('You are signed in!');
-})
+
+  res.send('You are signed in!!!');
+});
 
 app.listen(3000, () => {
   console.log('Listening');
