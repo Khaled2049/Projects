@@ -30,13 +30,13 @@ class UsersRepository {
     attrs.id = this.randomId();
 
     const salt = crypto.randomBytes(8).toString('hex');
-    const buf = await scrypt(attrs.password, salt, 64);
+    const buf = await scrypt(attrs.password, salt, 64)
 
     const records = await this.getAll();
     const record = {
       ...attrs,
       password: `${buf.toString('hex')}.${salt}`
-    };
+    }
     records.push(record);
 
     await this.writeAll(records);
@@ -44,13 +44,14 @@ class UsersRepository {
     return record;
   }
 
-  async comparePasswords(saved, supplied) {
-    // Saved -> password saved in our database. 'hashed.salt'
-    // Supplied -> password given to us by a user trying sign in
+  async comparePasswords(saved, supplied){
+    // const result = saved.split('.');
+    // const hashed = result[0];
+    // const salt = result[1];
     const [hashed, salt] = saved.split('.');
-    const hashedSuppliedBuf = await scrypt(supplied, salt, 64);
+    const hashedSupplied = await scrypt(supplied, salt, 64);
 
-    return hashed === hashedSuppliedBuf.toString('hex');
+    return hashed === hashedSupplied.toString('hex');
   }
 
   async writeAll(records) {
